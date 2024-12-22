@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title} + ' - ' + ${site_title}">OX 퀴즈 애플리케이션: 랜덤 퀴즈</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* 추가적인 사용자 정의 스타일 */
+        body {
+            padding-top: 70px; /* 네비게이션 바와의 간격 조정 */
+        }
+        .table-container {
+            max-height: 500px;
+            /* 둥근 모서리와 그림자 추가 */
+            border-radius: 15px;
+            overflow: hidden; /* 테이블이 부모의 둥근 모서리를 벗어나지 않도록 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff; /* 배경색 설정 */
+        }
+        /* 테이블 헤더와 바디에 동일한 배경색을 적용하여 일관성 유지 */
+        .table-container thead {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+<!-- 내비게이션 바 -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        <!-- 로고와 브랜드명 -->
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="/logo.png" alt="Logo" style="height: 40px; margin-right: 10px;">
+            OX Quiz
+        </a>
+        <!-- 반응형 토글 버튼 -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- 네비게이션 링크 -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <!-- 활성화된 링크에 'active' 클래스 추가 -->
+                <li class="nav-item">
+                    <a class="nav-link active" href="/quiz">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/quiz">Create New Quiz</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- 내비게이션 바 끝 -->
+
+<!-- 메인 컨테이너 -->
+<div class="container mt-5 mb-5">
+    <!-- 사이트 제목 -->
+    <h1 class="text-center mb-4" th:text="${site_title}">사이트제목</h1>
+
+    <!-- 서브 제목 -->
+    <h3 th:text="${title}" class="text-primary mb-4">랜덤 퀴즈 목록</h3>
+
+    <!-- 알림 메시지 -->
+    <div th:if="${complete}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${complete}">등록이 완료되었습니다.</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="닫기"></button>
+    </div>
+    <div th:if="${delComplete}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${delComplete}">삭제가 완료되었습니다.</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="닫기"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${error}">입력 검증 오류가 발생했습니다.</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="닫기"></button>
+    </div>
+
+    <!-- 무작위 퀴즈 테이블 -->
+    <div th:if="${#lists.size(randomQuizzes) > 0}" class="table-container rounded overflow-hidden">
+        <table class="table table-striped table-hover align-middle mb-0">
+            <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>퀴즈 내용</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="question, iterStat : ${randomQuizzes}">
+                <td th:text="${iterStat.index + 1}"></td>
+                <td th:text="${question}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 퀴즈가 없을 때 메시지 -->
+    <div th:if="${#lists.size(randomQuizzes) == 0}" class="text-center">
+        <p class="text-muted">등록된 퀴즈가 없습니다.</p>
+    </div>
+
+    <!-- 버튼 그룹 -->
+    <div class="d-flex justify-content-center mt-4">
+        <a th:href="@{/quiz}" class="btn btn-secondary me-3">Home</a>
+        <a th:href="@{/quiz}" class="btn btn-primary">Create New Quiz</a>
+    </div>
+</div>
+<!-- 메인 컨테이너 끝 -->
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
